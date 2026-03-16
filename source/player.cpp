@@ -1,20 +1,25 @@
 #include "player.h"
 
 void Player::init(Renderer& renderer){
-    spriteId = renderer.loadSprite("romfs:/gfx/smiley.t3x");
+    spriteId = renderer.loadSprite("romfs:/gfx/noob.t3x");
 }
 
-void Player::update(){
+void Player::update(float dt){
     u32 kHeld = hidKeysHeld();
-    u32 kDown = hidKeysDown();
+    bool moving = false;
 
-    if (kHeld & KEY_LEFT)   x -= speed;
-    if (kHeld & KEY_RIGHT)   x += speed;
+    if (kHeld & KEY_LEFT)  { x -= speed; moving = true; }
+    if (kHeld & KEY_RIGHT) { x += speed; moving = true; }
 
-    if (kDown & KEY_A && isGrounded)
-        vy = -4.0f;
+    if(moving)
+        currentAnim.anim = walkAnim;
+    else
+        currentAnim.anim = idleAnim;
 
-    vy += gravity;
+
+    currentAnim.update(dt);
+
+    //vy += gravity;
 
     y += vy;
 
@@ -27,5 +32,6 @@ void Player::update(){
 }
 
 void Player::render(Renderer& renderer){
+    renderer.setSpriteFrame(spriteId, currentAnim.getSheetIndex());
     renderer.setSpritePos(spriteId, x, y);
 }

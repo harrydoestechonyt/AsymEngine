@@ -10,6 +10,7 @@ struct Sprite
 {
     C2D_Sprite spr;
     bool active = false;
+    int sheetIndex = 0;
 };
 
 class Renderer
@@ -23,6 +24,7 @@ class Renderer
 
         int loadSprite(const char* path);
         void setSpritePos(int id, float x, float y);
+        void setSpriteFrame(int id, int frameIndex);
     private:
         C3D_RenderTarget* topScreen;
         C2D_SpriteSheet sheet;

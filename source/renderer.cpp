@@ -25,6 +25,11 @@ void Renderer::setSpritePos(int id, float x, float y){
         C2D_SpriteSetPos(&sprites[id].spr, x, y);
 }
 
+void Renderer::setSpriteFrame(int id, int frameIndex){
+    if (id < 0 || id >= MAX_SPRITES || !sprites[id].active) return;
+    C2D_SpriteFromSheet(&sprites[id].spr, sheet, frameIndex);
+}
+
 void Renderer::beginFrame(){
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(topScreen, C2D_Color32(0, 0, 0, 255));

@@ -10,4 +10,7 @@ class Audio
         void init();
         void playWAV(const char* path);
         void shutdown();
+    private:
+        ndspWaveBuf waveBuf;
+        u8* buf = nullptr;
 };

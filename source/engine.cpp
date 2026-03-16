@@ -21,13 +21,22 @@ void Engine::init(){
 }
 
 void Engine::run(){
+    u64 lastTime = osGetTime();
+
+    audio.playWAV("romfs:/audio/lms.wav");
+    printf("\nPlaying Eternal Hope, Eternal Fight");
+
     while(aptMainLoop()){
+        u64 now = osGetTime();
+        float dt = (now - lastTime) / 1000.0f;
+        lastTime = now;
+
         hidScanInput();
         u32 kDown = hidKeysDown();
 
         if(kDown & KEY_START) break;
 
-        player.update();
+        player.update(dt);
         player.render(renderer);
 
         renderer.beginFrame();
@@ -62,17 +71,18 @@ void Engine::crash(const char* reason){
     
     printf("\x1b[2;1HBOOTROM 8046");
     printf("\x1b[4;1HERRCODE: %s", reason);
-    printf("\x1b[4;1HDon't worry, your 3DS is fine\nI thought it'd be funny to do this xD\n\nPress Any button to exit");
+    printf("\x1b[6;1HDon't worry, your 3DS is fine\nI thought it'd be funny to do this xD\n\nPress Any button to exit");
 
     while(aptMainLoop()){
         hidScanInput();
-        u32 kDown = hidKeysDown()
+        u32 kDown = hidKeysDown();
         if(kDown) break;
         gfxFlushBuffers();
         gfxSwapBuffers();
         gspWaitForVBlank();
     }
 
+    romfsExit();
     gfxExit();
     exit(1);
 }
