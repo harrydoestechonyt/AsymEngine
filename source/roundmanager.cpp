@@ -3,10 +3,10 @@
 
 // just a stub for now
 
-void RoundManager::Init(){
+void RoundManager::init(){
 
 }
 
-void RoundManager::beginRound{
+void RoundManager::beginRound(){
     
 }
