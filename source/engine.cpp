@@ -70,15 +70,19 @@ void Engine::run(){
             if(kDown & KEY_START) break;
 
             player.update(dt);
-            player.render(renderer);
-
+            
             renderer.beginFrame();
+            player.render(renderer);
             renderer.drawSprites();
+            round.update(dt, renderer);
             renderer.endFrame();
         }else{
             if(kDown & KEY_X){
                 inGame = true;
+                lastTime = osGetTime();
                 consoleClear();
+                round.init();
+                round.beginRound();
             }
 
             //i dont fucking know what to do for the other options

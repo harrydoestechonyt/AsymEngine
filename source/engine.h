@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "player.h"
+#include "roundmanager.h"
 
 #define DEBUGMODE false
 
@@ -19,6 +20,7 @@ class Engine
         Renderer renderer;
         Audio audio;
         Player player;
+        RoundManager round;
     private:
         // placeholder
 

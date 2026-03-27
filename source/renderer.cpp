@@ -2,6 +2,7 @@
 
 void Renderer::init(){
     topScreen = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
+    g_textbuf = C2D_TextBufNew(4096);
 }
 
 int Renderer::loadSprite(const char* path){
@@ -34,6 +35,7 @@ void Renderer::beginFrame(){
     C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
     C2D_TargetClear(topScreen, C2D_Color32(0, 0, 0, 255));
     C2D_SceneBegin(topScreen);
+    C2D_TextBufClear(g_textbuf);
 }
 
 void Renderer::drawSprites(){
@@ -48,4 +50,13 @@ void Renderer::endFrame(){
 
 void Renderer::shutdown(){
     C2D_SpriteSheetFree(sheet);
+    C2D_TextBufDelete(g_textbuf);
+}
+
+void Renderer::drawText(const char* txt, float x, float y){
+    C2D_Text g_text;
+
+    C2D_TextParse(&g_text, g_textbuf, txt);
+
+    C2D_DrawText(&g_text, C2D_WithColor, x, y, 0.0f, 1.0f, 1.0f, C2D_Color32(255, 255, 255, 255));
 }

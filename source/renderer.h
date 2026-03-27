@@ -25,8 +25,10 @@ class Renderer
         int loadSprite(const char* path);
         void setSpritePos(int id, float x, float y);
         void setSpriteFrame(int id, int frameIndex);
+        void drawText(const char* txt, float x, float y);
     private:
         C3D_RenderTarget* topScreen;
         C2D_SpriteSheet sheet;
         Sprite sprites[MAX_SPRITES];
+        C2D_TextBuf g_textbuf;
 };

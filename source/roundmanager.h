@@ -1,13 +1,23 @@
 #pragma once
 #include <3ds.h>
-#include "engine.h"
+#include "renderer.h"
+
+struct aiPlayers {
+    char* name;
+    bool alive = true;
+    char* characterName;
+};
 
 class RoundManager
 {
     public:
         void init();
         void beginRound();
-        int timer = 0;
+        void update(float dT, Renderer& rend);
+        float timer = 0;
+        bool timerPause = false;
+        aiPlayers npcs[7];
+        char* timerState = "Round begins in: ";
     private:
 
 };
