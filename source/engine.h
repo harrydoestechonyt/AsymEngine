@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include "player.h"
 
+#define DEBUGMODE false
+
 class Engine
 {
     public: 

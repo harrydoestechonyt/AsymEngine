@@ -1,5 +1,26 @@
 #include "engine.h"
 
+bool accountSelected = false;
+static char miiname[36];
+
+void miiSelect(void){
+    static MiiSelectorConf msConf;
+    static MiiSelectorReturn msRet;
+
+    miiSelectorInit(&msConf);
+    miiSelectorSetTitle(&msConf, "Select an account");
+    miiSelectorSetOptions(&msConf, MIISELECTOR_GUESTS|MIISELECTOR_TOP|MIISELECTOR_GUESTSTART);
+    miiSelectorBlacklistUserMii(&msConf, 0);
+	miiSelectorLaunch(&msConf, &msRet);
+
+    if(miiSelectorChecksumIsValid(&msRet)){
+        if(!msRet.no_mii_selected){
+            accountSelected = true;
+            miiSelectorReturnGetName(&msRet, miiname, sizeof(miiname));
+        }
+    }
+}
+
 void Engine::init(){
     gfxInitDefault();
     C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
@@ -12,7 +33,7 @@ void Engine::init(){
     if (romfsInit() != 0)
         crash("romfsInit FAILED");
     else
-        printf("romfsInit OK");
+        if(DEBUGMODE) printf("romfsInit OK");
 
 
     renderer.init();
@@ -24,24 +45,44 @@ void Engine::run(){
     u64 lastTime = osGetTime();
 
     audio.playWAV("romfs:/audio/lms.wav");
-    printf("\nPlaying Eternal Hope, Eternal Fight");
+    if(DEBUGMODE) printf("\nPlaying Eternal Hope, Eternal Fight");
+
+    bool inGame = false;
+
+    while(!accountSelected){
+        miiSelect();
+    }
+
+    printf("\nWelcome, %s", miiname);
+    printf("MENU\n");
+    printf("X - Start\n");
+    printf("Y - Settings\n");
+    printf("A - Change account\n");
 
     while(aptMainLoop()){
-        u64 now = osGetTime();
-        float dt = (now - lastTime) / 1000.0f;
-        lastTime = now;
-
         hidScanInput();
         u32 kDown = hidKeysDown();
+        if(inGame){
+            u64 now = osGetTime();
+            float dt = (now - lastTime) / 1000.0f;
+            lastTime = now;
 
-        if(kDown & KEY_START) break;
+            if(kDown & KEY_START) break;
 
-        player.update(dt);
-        player.render(renderer);
+            player.update(dt);
+            player.render(renderer);
 
-        renderer.beginFrame();
-        renderer.drawSprites();
-        renderer.endFrame();
+            renderer.beginFrame();
+            renderer.drawSprites();
+            renderer.endFrame();
+        }else{
+            if(kDown & KEY_X){
+                inGame = true;
+                consoleClear();
+            }
+
+            //i dont fucking know what to do for the other options
+        }
     }
 }
 
