@@ -21,6 +21,15 @@ int Renderer::loadSprite(const char* path){
     return -1;
 }
 
+int Renderer::loadBackground(const char* path){
+    bgSheet = C2D_SpriteSheetLoad(path);
+    if (!bgSheet) return -1;
+
+    bgImage = C2D_SpriteSheetGetImage(bgSheet, 0);
+    hasBg = true;
+    return 0;
+}
+
 void Renderer::setSpritePos(int id, float x, float y){
     if (id >= 0 && id < MAX_SPRITES && sprites[id].active)
         C2D_SpriteSetPos(&sprites[id].spr, x, y);
@@ -36,6 +45,9 @@ void Renderer::beginFrame(){
     C2D_TargetClear(topScreen, C2D_Color32(0, 0, 0, 255));
     C2D_SceneBegin(topScreen);
     C2D_TextBufClear(g_textbuf);
+
+    if(hasBg)
+        C2D_DrawImageAt(bgImage, 0.0f, 0.0f, 0.0f, nullptr, 1.0f, 1.0f);
 }
 
 void Renderer::drawSprites(){
@@ -59,4 +71,9 @@ void Renderer::drawText(const char* txt, float x, float y){
     C2D_TextParse(&g_text, g_textbuf, txt);
 
     C2D_DrawText(&g_text, C2D_WithColor, x, y, 0.0f, 1.0f, 1.0f, C2D_Color32(255, 255, 255, 255));
+}
+
+void Renderer::setSpriteScale(int id, float sX, float sY){
+    if (id >= 0 && id < MAX_SPRITES && sprites[id].active)
+        C2D_SpriteSetScale(&sprites[id].spr, sX, sY);
 }

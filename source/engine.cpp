@@ -53,6 +53,7 @@ void Engine::run(){
     //if(DEBUGMODE) printf("\nPlaying Eternal Hope, Eternal Fight");
     // yeah fuck you i dont need you anymore
 
+    audio.playWAV("romfs:/audio/menu.wav");
 
     bool inGame = false;
 
@@ -61,7 +62,7 @@ void Engine::run(){
     }
 
     printf("\nWelcome, %s", miiname);
-    printf("MENU\n");
+    printf("\nMENU\n");
     printf("X - Start\n");
     printf("Y - Settings\n");
     printf("A - Change account\n");
@@ -85,10 +86,11 @@ void Engine::run(){
             renderer.endFrame();
         }else{
             if(kDown & KEY_X){
+                audio.stopAll();
                 inGame = true;
                 lastTime = osGetTime();
                 consoleClear();
-                round.init(audio);
+                round.init(audio, renderer);
                 round.beginRound(audio);
             }
 

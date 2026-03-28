@@ -4,7 +4,8 @@
 
 // just a stub for now
 
-void RoundManager::init(Audio& audio){
+void RoundManager::init(Audio& audio, Renderer& rend){
+    rend.loadBackground("romfs:/gfx/lobby.t3x");
     timer = 0;
     audioSource = audio;
 }
@@ -33,6 +34,7 @@ void RoundManager::update(float dT, Renderer& rend, Player& plr){
             audioSource.stopAll();
             break;
         case RoundState::INROUND:
+            rend.loadBackground("romfs:/gfx/lobby.t3x");
             beginRound(audioSource);
             break;
         case RoundState::LMS:
@@ -55,7 +57,7 @@ void RoundManager::update(float dT, Renderer& rend, Player& plr){
         if(alive == 0){
             state = RoundState::LMS;
             timerPause = true;
-            timer = 70;
+            timer = 70.426;
             timerPause = false;
             audioSource.playWAV("romfs:/audio/lms.wav");
         }

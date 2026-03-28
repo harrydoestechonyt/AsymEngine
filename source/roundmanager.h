@@ -19,7 +19,7 @@ enum RoundState{
 class RoundManager
 {
     public:
-        void init(Audio& audio);
+        void init(Audio& audio, Renderer& rend);
         void beginRound(Audio& audio);
         void update(float dT, Renderer& rend, Player& plr);
         float timer = 0;
@@ -29,5 +29,6 @@ class RoundManager
         RoundState state;
         Audio audioSource;
     private:
+
 
 };

@@ -8,11 +8,12 @@ void Player::update(float dt){
     u32 kHeld = hidKeysHeld();
     bool moving = false;
 
-    if (kHeld & KEY_LEFT)  { x -= speed; moving = true; }
-    if (kHeld & KEY_RIGHT) { x += speed; moving = true; }
+    if (kHeld & KEY_LEFT)  { x -= speed; moving = true; facingRight = false; }
+    if (kHeld & KEY_RIGHT) { x += speed; moving = true; facingRight = true;}
+    if (kHeld & KEY_L) { speed = 4.0f; sprinting = true; } else {speed = 2.0f; sprinting = false; }
 
     if(moving)
-        currentAnim.anim = walkAnim;
+        currentAnim.anim = !sprinting ? walkAnim : runAnim;
     else
         currentAnim.anim = idleAnim;
 
@@ -34,4 +35,5 @@ void Player::update(float dt){
 void Player::render(Renderer& renderer){
     renderer.setSpriteFrame(spriteId, currentAnim.getSheetIndex());
     renderer.setSpritePos(spriteId, x, y);
+    renderer.setSpriteScale(spriteId, facingRight ? 1.0f : -1.0f, 1.0f);
 }

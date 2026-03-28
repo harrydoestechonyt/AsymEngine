@@ -51,7 +51,7 @@ void Audio::playWAV(const char* path)
 void Audio::stopAll(){
     if(DEBUGMODE) printf("\n[Audio] Stopping all audio");
 
-    if (buf) linearFree(buf);
+    if (buf) { linearFree(buf); buf = nullptr; }
 
     ndspChnWaveBufClear(AUDIO_CHANNEL);
     
@@ -67,5 +67,5 @@ void Audio::stopAll(){
 
 void Audio::shutdown(){
     if(DEBUGMODE) printf("\n[Audio] Shutting down");
-    if (buf) linearFree(buf);
+    if (buf) { linearFree(buf); buf = nullptr; }
 }
