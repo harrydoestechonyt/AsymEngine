@@ -10,6 +10,8 @@
 
 #define DEBUGMODE false
 
+extern char miiname[36];
+
 class Engine
 {
     public: 

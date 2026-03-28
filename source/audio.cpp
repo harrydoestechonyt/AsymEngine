@@ -48,6 +48,23 @@ void Audio::playWAV(const char* path)
     if(DEBUGMODE) printf("\n[Audio] WaveBuf submitted to NDSP");
 }
 
+void Audio::stopAll(){
+    if(DEBUGMODE) printf("\n[Audio] Stopping all audio");
+
+    if (buf) linearFree(buf);
+
+    ndspChnWaveBufClear(AUDIO_CHANNEL);
+    
+    ndspChnReset(AUDIO_CHANNEL);
+    
+    ndspSetOutputMode(NDSP_OUTPUT_STEREO);
+    ndspChnSetInterp(AUDIO_CHANNEL, NDSP_INTERP_LINEAR);
+    ndspChnSetRate(AUDIO_CHANNEL, 48000.0f);
+    ndspChnSetFormat(AUDIO_CHANNEL, NDSP_FORMAT_STEREO_PCM16);
+    
+    if(DEBUGMODE) printf("\n[Audio] All audio stopped");
+}
+
 void Audio::shutdown(){
     if(DEBUGMODE) printf("\n[Audio] Shutting down");
     if (buf) linearFree(buf);

@@ -1,23 +1,33 @@
 #pragma once
 #include <3ds.h>
 #include "renderer.h"
+#include "audio.h"
+#include "player.h"
 
 struct aiPlayers {
     char* name;
-    bool alive = true;
+    bool alive = false;
     char* characterName;
+};
+
+enum RoundState{
+    PREROUND,
+    INROUND,
+    LMS
 };
 
 class RoundManager
 {
     public:
-        void init();
-        void beginRound();
-        void update(float dT, Renderer& rend);
+        void init(Audio& audio);
+        void beginRound(Audio& audio);
+        void update(float dT, Renderer& rend, Player& plr);
         float timer = 0;
         bool timerPause = false;
         aiPlayers npcs[7];
-        char* timerState = "Round begins in: ";
+        const char* timerState = "Round begins in: ";
+        RoundState state;
+        Audio audioSource;
     private:
 
 };

@@ -1,7 +1,7 @@
 #include "engine.h"
 
 bool accountSelected = false;
-static char miiname[36];
+char miiname[36];
 
 void miiSelect(void){
     static MiiSelectorConf msConf;
@@ -26,7 +26,12 @@ void Engine::init(){
     C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
     C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
     C2D_Prepare();
-    ndspInit();
+    
+
+    if(ndspInit() != 0)
+        crash("nsdpInit failed! - no dsp firmware?");
+    else
+        if(DEBUGMODE) printf("nsdpInit - OK");
 
     consoleInit(GFX_BOTTOM, nullptr);
 
@@ -44,8 +49,10 @@ void Engine::init(){
 void Engine::run(){
     u64 lastTime = osGetTime();
 
-    audio.playWAV("romfs:/audio/lms.wav");
-    if(DEBUGMODE) printf("\nPlaying Eternal Hope, Eternal Fight");
+    //audio.playWAV("romfs:/audio/lms.wav");
+    //if(DEBUGMODE) printf("\nPlaying Eternal Hope, Eternal Fight");
+    // yeah fuck you i dont need you anymore
+
 
     bool inGame = false;
 
@@ -74,15 +81,15 @@ void Engine::run(){
             renderer.beginFrame();
             player.render(renderer);
             renderer.drawSprites();
-            round.update(dt, renderer);
+            round.update(dt, renderer, player);
             renderer.endFrame();
         }else{
             if(kDown & KEY_X){
                 inGame = true;
                 lastTime = osGetTime();
                 consoleClear();
-                round.init();
-                round.beginRound();
+                round.init(audio);
+                round.beginRound(audio);
             }
 
             //i dont fucking know what to do for the other options

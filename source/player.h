@@ -22,6 +22,7 @@ class Player {
         void update(float dt);
         void render(Renderer& renderer);
         bool isGrounded = false;
+        bool alive = true;
     private:
         float x = 200.0f, y = 120.0f;
         float speed = 2.0f;
